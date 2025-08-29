@@ -1,29 +1,29 @@
 graph LR
     subgraph "公共API层"
-        A[XHSLoginManager<br/>单例模式]
+        A["XHSLoginManager\n单例模式"]
     end
     
     subgraph "核心业务层"
-        B[AuthManager<br/>授权管理]
-        C[PKCEHelper<br/>安全增强]
+        B["AuthManager\n授权管理"]
+        C["PKCEHelper\n安全增强"]
     end
     
     subgraph "网络层"
-        D[ApiClient<br/>HTTP客户端]
-        E[AuthService<br/>接口定义]
+        D["ApiClient\nHTTP客户端"]
+        E["AuthService\n接口定义"]
     end
     
     subgraph "安全层"
-        F[CryptoUtils<br/>加密工具]
-        G[SignatureVerifier<br/>签名验证]
+        F["CryptoUtils\n加密工具"]
+        G["SignatureVerifier\n签名验证"]
     end
     
     subgraph "存储层"
-        H[StorageUtils<br/>本地存储]
+        H["StorageUtils\n本地存储"]
     end
     
     subgraph "工具层"
-        I[AppUtils<br/>应用检测]
+        I["AppUtils\n应用检测"]
     end
     
     A --> B

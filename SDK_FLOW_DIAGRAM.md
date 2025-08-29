@@ -63,10 +63,10 @@ sequenceDiagram
     PKCE-->>-Auth: 返回PKCE参数
 
     Auth->>Auth: 创建AuthRequest
-    Note right of Auth: AuthRequest包含:<br/>- appId<br/>- scopes<br/>- state<br/>- code_challenge<br/>- code_challenge_method
+    Note right of Auth: AuthRequest包含:\n- appId\n- scopes\n- state\n- code_challenge\n- code_challenge_method
 
     Auth->>+XHS: startActivityForResult(Intent)
-    Note right of Auth: Intent目标:<br/>com.xingin.xhs/.oauth.OAuthActivity
+    Note right of Auth: Intent目标:\ncom.xingin.xhs/.oauth.OAuthActivity
 
     Note over App,Storage: 3. 小红书App处理
     XHS->>XHS: 显示授权页面
@@ -83,7 +83,7 @@ sequenceDiagram
 
     alt 授权成功
         Auth->>+Server: 交换authorization_code
-        Note right of Auth: TokenRequest包含:<br/>- code<br/>- client_id<br/>- client_secret<br/>- code_verifier
+        Note right of Auth: TokenRequest包含:\n- code\n- client_id\n- client_secret\n- code_verifier
         
         Server->>Server: 验证code_verifier
         Server-->>-Auth: 返回access_token+refresh_token
@@ -113,30 +113,30 @@ sequenceDiagram
 ```mermaid
 graph LR
     subgraph "公共API层"
-        A[XHSLoginManager<br/>单例模式]
+        A["XHSLoginManager\n单例模式"]
     end
     
     subgraph "核心业务层"
-        B[AuthManager<br/>授权管理]
-        C[PKCEHelper<br/>安全增强]
+        B["AuthManager\n授权管理"]
+        C["PKCEHelper\n安全增强"]
     end
     
     subgraph "网络层"
-        D[ApiClient<br/>HTTP客户端]
-        E[AuthService<br/>接口定义]
+        D["ApiClient\nHTTP客户端"]
+        E["AuthService\n接口定义"]
     end
     
     subgraph "安全层"
-        F[CryptoUtils<br/>加密工具]
-        G[SignatureVerifier<br/>签名验证]
+        F["CryptoUtils\n加密工具"]
+        G["SignatureVerifier\n签名验证"]
     end
     
     subgraph "存储层"
-        H[StorageUtils<br/>本地存储]
+        H["StorageUtils\n本地存储"]
     end
     
     subgraph "工具层"
-        I[AppUtils<br/>应用检测]
+        I["AppUtils\n应用检测"]
     end
     
     A --> B
@@ -173,10 +173,10 @@ sequenceDiagram
     Note over ThirdParty,Entry: App-to-App授权通信
     
     ThirdParty->>+Intent: 创建Intent
-    Note right of Intent: ComponentName:<br/>com.xingin.xhs/<br/>.oauth.OAuthActivity
+    Note right of Intent: ComponentName:\ncom.xingin.xhs/\n.oauth.OAuthActivity
     
     Intent->>Intent: 添加AuthRequest数据
-    Note right of Intent: Extra: EXTRA_AUTH_REQUEST
+    Note right of Intent: Extra:\nEXTRA_AUTH_REQUEST
     
     ThirdParty->>+XHSApp: startActivityForResult()
     
@@ -184,13 +184,13 @@ sequenceDiagram
     XHSApp->>XHSApp: 处理用户授权决定
     
     XHSApp->>+Entry: 返回结果Intent
-    Note right of Entry: Extra: EXTRA_AUTH_RESPONSE<br/>包含AuthResponse对象
+    Note right of Entry: Extra:\nEXTRA_AUTH_RESPONSE\n包含AuthResponse对象
     
     Entry->>Entry: 处理AuthResponse
     Entry-->>-ThirdParty: setResult() + finish()
     
     ThirdParty->>ThirdParty: onActivityResult()
-    Note right of ThirdParty: 解析AuthResponse<br/>继续后续流程
+    Note right of ThirdParty: 解析AuthResponse\n继续后续流程
 ```
 
 ## 5. 安全机制流程图
@@ -200,9 +200,9 @@ sequenceDiagram
 ```mermaid
 graph TD
     A[开始登录] --> B[生成PKCE参数]
-    B --> C[code_verifier<br/>随机字符串]
-    B --> D[code_challenge<br/>SHA256(code_verifier)]
-    B --> E[state<br/>CSRF防护]
+    B --> C["code_verifier\n随机字符串"]
+    B --> D["code_challenge\nSHA256(code_verifier)"]
+    B --> E["state\nCSRF防护"]
     
     C --> F[本地临时存储]
     D --> G[发送给XHS App]

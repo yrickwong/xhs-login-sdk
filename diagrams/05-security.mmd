@@ -1,8 +1,8 @@
 graph TD
     A[开始登录] --> B[生成PKCE参数]
-    B --> C["code_verifier<br/>随机字符串"]
-    B --> D["code_challenge<br/>SHA256(code_verifier)"]
-    B --> E[state<br/>CSRF防护]
+    B --> C["code_verifier\n随机字符串"]
+    B --> D["code_challenge\nSHA256(code_verifier)"]
+    B --> E["state\nCSRF防护"]
     
     C --> F[本地临时存储]
     D --> G[发送给XHS App]
