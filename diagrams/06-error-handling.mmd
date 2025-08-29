@@ -1,0 +1,34 @@
+graph TD
+    A[SDK操作] --> B{检查配置}
+    B -->|未配置| C[ERROR_NOT_CONFIGURED]
+    B -->|已配置| D{检查XHS App}
+    
+    D -->|未安装| E[ERROR_APP_NOT_INSTALLED]
+    D -->|不支持授权| F[ERROR_UNSUPPORTED]
+    D -->|支持| G[启动授权流程]
+    
+    G --> H{授权结果}
+    H -->|用户取消| I["onCancel()"]
+    H -->|授权拒绝| J[ERROR_AUTH_DENIED]
+    H -->|授权成功| K[交换token]
+    
+    K --> L{网络请求}
+    L -->|失败| M[ERROR_NETWORK]
+    L -->|成功| N{token有效}
+    
+    N -->|无效| O[ERROR_TOKEN_INVALID]
+    N -->|有效| P[获取用户信息]
+    
+    P --> Q{用户信息}
+    Q -->|失败| R[ERROR_USER_INFO_FAILED]
+    Q -->|成功| S["onSuccess()"]
+    
+    style C fill:#ffcdd2
+    style E fill:#ffcdd2
+    style F fill:#ffcdd2
+    style I fill:#fff3e0
+    style J fill:#ffcdd2
+    style M fill:#ffcdd2
+    style O fill:#ffcdd2
+    style R fill:#ffcdd2
+    style S fill:#c8e6c9

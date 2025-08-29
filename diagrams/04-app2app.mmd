@@ -1,0 +1,27 @@
+sequenceDiagram
+    participant ThirdParty as 第三方App
+    participant Intent as Android Intent
+    participant XHSApp as 小红书App
+    participant Entry as XHSEntryActivity
+
+    Note over ThirdParty,Entry: App-to-App授权通信
+    
+    ThirdParty->>+Intent: 创建Intent
+    Note right of Intent: ComponentName:<br/>com.xingin.xhs/<br/>.oauth.OAuthActivity
+    
+    Intent->>Intent: 添加AuthRequest数据
+    Note right of Intent: Extra: EXTRA_AUTH_REQUEST
+    
+    ThirdParty->>+XHSApp: startActivityForResult()
+    
+    XHSApp->>XHSApp: 显示OAuth授权页面
+    XHSApp->>XHSApp: 处理用户授权决定
+    
+    XHSApp->>+Entry: 返回结果Intent
+    Note right of Entry: Extra: EXTRA_AUTH_RESPONSE<br/>包含AuthResponse对象
+    
+    Entry->>Entry: 处理AuthResponse
+    Entry-->>-ThirdParty: setResult() + finish()
+    
+    ThirdParty->>ThirdParty: onActivityResult()
+    Note right of ThirdParty: 解析AuthResponse<br/>继续后续流程

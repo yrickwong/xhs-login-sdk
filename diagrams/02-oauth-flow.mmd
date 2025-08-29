@@ -1,0 +1,67 @@
+sequenceDiagram
+    participant App as 第三方App
+    participant SDK as XHSLoginManager
+    participant Auth as AuthManager  
+    participant PKCE as PKCEHelper
+    participant XHS as 小红书App
+    participant Entry as XHSEntryActivity
+    participant Server as OAuth服务器
+    participant Storage as StorageUtils
+
+    Note over App,Storage: 1. 初始化阶段
+    App->>+SDK: configure(context, appId, appSecret)
+    SDK->>+Auth: 创建AuthManager实例
+    Auth-->>-SDK: 初始化完成
+    SDK-->>-App: 配置完成
+
+    Note over App,Storage: 2. 登录流程启动
+    App->>+SDK: login(activity, scopes, callback)
+    SDK->>+Auth: login(activity, scopes, callback)
+    Auth->>+PKCE: 生成PKCE参数
+    PKCE->>PKCE: 生成code_verifier
+    PKCE->>PKCE: 生成code_challenge
+    PKCE->>PKCE: 生成state参数
+    PKCE-->>-Auth: 返回PKCE参数
+
+    Auth->>Auth: 创建AuthRequest
+    Note right of Auth: AuthRequest包含:<br/>- appId<br/>- scopes<br/>- state<br/>- code_challenge<br/>- code_challenge_method
+
+    Auth->>+XHS: startActivityForResult(Intent)
+    Note right of Auth: Intent目标:<br/>com.xingin.xhs/.oauth.OAuthActivity
+
+    Note over App,Storage: 3. 小红书App处理
+    XHS->>XHS: 显示授权页面
+    XHS->>XHS: 用户确认/拒绝授权
+    XHS->>+Entry: 返回AuthResponse
+    
+    Note over App,Storage: 4. 授权结果处理
+    Entry->>Entry: 处理AuthResponse
+    Entry-->>-Auth: onActivityResult()
+    
+    Auth->>Auth: 验证state参数
+    Auth->>PKCE: verifyState(state)
+    PKCE-->>Auth: 验证结果
+
+    alt 授权成功
+        Auth->>+Server: 交换authorization_code
+        Note right of Auth: TokenRequest包含:<br/>- code<br/>- client_id<br/>- client_secret<br/>- code_verifier
+        
+        Server->>Server: 验证code_verifier
+        Server-->>-Auth: 返回access_token+refresh_token
+        
+        Auth->>+Storage: 保存token信息
+        Storage->>Storage: AES加密存储
+        Storage-->>-Auth: 保存完成
+        
+        Auth->>+Server: 获取用户信息
+        Server-->>-Auth: 返回用户信息
+        
+        Auth->>+Storage: 保存用户信息
+        Storage-->>-Auth: 保存完成
+        
+        Auth-->>SDK: onSuccess(XHSUser)
+        SDK-->>App: onSuccess(XHSUser)
+    else 授权失败/取消
+        Auth-->>SDK: onError(XHSError) 或 onCancel()
+        SDK-->>App: onError(XHSError) 或 onCancel()
+    end

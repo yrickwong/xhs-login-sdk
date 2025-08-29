@@ -1,0 +1,22 @@
+graph TD
+    A[存储敏感数据] --> B["CryptoUtils.encrypt()"]
+    B --> C[生成设备唯一密钥]
+    C --> D[AES加密数据]
+    D --> E[保存到SharedPreferences]
+    
+    F[读取敏感数据] --> G[从SharedPreferences读取]
+    G --> H["CryptoUtils.decrypt()"]  
+    H --> I[使用设备密钥解密]
+    I --> J[返回明文数据]
+    
+    K[数据类型] --> L[access_token]
+    K --> M[refresh_token] 
+    K --> N[用户ID]
+    K --> O[OpenID]
+    
+    style D fill:#fff3e0
+    style I fill:#c8e6c9
+    style L fill:#e3f2fd
+    style M fill:#e3f2fd
+    style N fill:#e3f2fd
+    style O fill:#e3f2fd

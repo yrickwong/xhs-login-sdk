@@ -1,0 +1,30 @@
+graph TD
+    A[开始登录] --> B[生成PKCE参数]
+    B --> C["code_verifier<br/>随机字符串"]
+    B --> D["code_challenge<br/>SHA256(code_verifier)"]
+    B --> E[state<br/>CSRF防护]
+    
+    C --> F[本地临时存储]
+    D --> G[发送给XHS App]
+    E --> G
+    
+    G --> H[用户授权]
+    H --> I[返回authorization_code + state]
+    
+    I --> J[验证state参数]
+    J --> K{state匹配?}
+    
+    K -->|是| L[使用code_verifier交换token]
+    K -->|否| M[拒绝授权 - CSRF攻击]
+    
+    L --> N[服务器验证PKCE]
+    N --> O[返回access_token]
+    
+    O --> P[AES加密存储token]
+    
+    style C fill:#ffcdd2
+    style D fill:#ffcdd2  
+    style E fill:#ffcdd2
+    style J fill:#c8e6c9
+    style N fill:#c8e6c9
+    style P fill:#fff3e0

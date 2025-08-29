@@ -1,0 +1,46 @@
+graph LR
+    subgraph "公共API层"
+        A[XHSLoginManager<br/>单例模式]
+    end
+    
+    subgraph "核心业务层"
+        B[AuthManager<br/>授权管理]
+        C[PKCEHelper<br/>安全增强]
+    end
+    
+    subgraph "网络层"
+        D[ApiClient<br/>HTTP客户端]
+        E[AuthService<br/>接口定义]
+    end
+    
+    subgraph "安全层"
+        F[CryptoUtils<br/>加密工具]
+        G[SignatureVerifier<br/>签名验证]
+    end
+    
+    subgraph "存储层"
+        H[StorageUtils<br/>本地存储]
+    end
+    
+    subgraph "工具层"
+        I[AppUtils<br/>应用检测]
+    end
+    
+    A --> B
+    B --> C
+    B --> D
+    B --> I
+    D --> E
+    B --> H
+    H --> F
+    B --> G
+    
+    style A fill:#e1f5fe
+    style B fill:#f3e5f5
+    style C fill:#fff3e0
+    style D fill:#e8f5e8
+    style E fill:#e8f5e8
+    style F fill:#fce4ec
+    style G fill:#fce4ec
+    style H fill:#fff8e1
+    style I fill:#f1f8e9

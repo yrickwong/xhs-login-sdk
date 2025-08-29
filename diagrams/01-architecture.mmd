@@ -1,0 +1,25 @@
+graph TB
+    subgraph "第三方应用"
+        A[第三方App] --> B[XHSLoginManager]
+        B --> C[AuthManager]
+        C --> D[XHSEntryActivity]
+    end
+    
+    subgraph "小红书应用"
+        E[小红书App] --> F[OAuthActivity]
+    end
+    
+    subgraph "小红书服务器"
+        G[OAuth授权服务器] --> H[用户信息API]
+    end
+    
+    subgraph "SDK核心组件"
+        I[PKCEHelper] --> J[CryptoUtils]
+        K[ApiClient] --> L[StorageUtils]
+    end
+    
+    A -.-> E
+    D -.-> F
+    C --> K
+    C --> I
+    K --> G

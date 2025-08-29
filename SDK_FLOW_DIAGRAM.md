@@ -2,6 +2,8 @@
 
 ## 1. 整体架构图
 
+![整体架构图](diagrams/01-architecture.png)
+
 ```mermaid
 graph TB
     subgraph "第三方应用"
@@ -31,6 +33,8 @@ graph TB
 ```
 
 ## 2. 完整OAuth授权流程
+
+![OAuth授权流程](diagrams/02-oauth-flow.png)
 
 ```mermaid
 sequenceDiagram
@@ -104,6 +108,8 @@ sequenceDiagram
 
 ## 3. 核心组件交互图
 
+![核心组件交互图](diagrams/03-components.png)
+
 ```mermaid
 graph LR
     subgraph "公共API层"
@@ -155,6 +161,8 @@ graph LR
 
 ## 4. App-to-App通信流程
 
+![App-to-App通信流程](diagrams/04-app2app.png)
+
 ```mermaid
 sequenceDiagram
     participant ThirdParty as 第三方App
@@ -186,6 +194,8 @@ sequenceDiagram
 ```
 
 ## 5. 安全机制流程图
+
+![安全机制流程图](diagrams/05-security.png)
 
 ```mermaid
 graph TD
@@ -221,6 +231,8 @@ graph TD
 ```
 
 ## 6. 错误处理流程
+
+![错误处理流程](diagrams/06-error-handling.png)
 
 ```mermaid
 graph TD
@@ -261,6 +273,8 @@ graph TD
 
 ## 7. 存储加密流程
 
+![存储加密流程](diagrams/07-storage.png)
+
 ```mermaid
 graph TD
     A[存储敏感数据] --> B[CryptoUtils.encrypt()]
@@ -287,6 +301,8 @@ graph TD
 ```
 
 ## 8. SDK生命周期管理
+
+![SDK生命周期管理](diagrams/08-lifecycle.png)
 
 ```mermaid
 stateDiagram-v2
