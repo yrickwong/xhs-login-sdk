@@ -22,7 +22,7 @@ class ApiClient : AuthService {
 
     companion object {
         /** 小红书开放平台 API 基础 URL */
-        private const val BASE_URL = "https://open.xiaohongshu.com"
+        private const val BASE_URL = "http://10.0.2.2:8080"
         
         /** 获取访问令牌的端点路径 */
         private const val TOKEN_ENDPOINT = "/oauth/token"

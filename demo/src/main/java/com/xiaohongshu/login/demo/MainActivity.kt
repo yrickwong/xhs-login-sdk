@@ -2,6 +2,7 @@ package com.xiaohongshu.login.demo
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -16,8 +17,9 @@ import com.xiaohongshu.login.model.XHSUser
 class MainActivity : AppCompatActivity() {
     
     companion object {
-        private const val APP_ID = "your_app_id_here"
-        private const val APP_SECRET = "your_app_secret_here"
+        private const val TAG = "XHS_DemoApp"
+        private const val APP_ID = "test_app_id"
+        private const val APP_SECRET = "test_app_secret"
     }
     
     private lateinit var binding: ActivityMainBinding
@@ -138,6 +140,7 @@ class MainActivity : AppCompatActivity() {
     
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        Log.d(TAG, "onActivityResult: requestCode=$requestCode, resultCode=$resultCode, data=$data")
         loginManager.handleActivityResult(requestCode, resultCode, data)
     }
 }

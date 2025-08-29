@@ -16,3 +16,4 @@ dependencyResolutionManagement {
 rootProject.name = "XHSLoginSDK"
 include ':xhslogin'
 include ':demo'
+include ':mock-xhs-app'

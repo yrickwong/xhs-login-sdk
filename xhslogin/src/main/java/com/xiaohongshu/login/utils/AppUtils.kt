@@ -33,6 +33,11 @@ object AppUtils {
 
     /** 授权请求 Intent 额外数据键名 */
     const val EXTRA_AUTH_REQUEST = "auth_request"
+    const val EXTRA_APP_ID = "app_id"
+    const val EXTRA_SCOPE = "scope"
+    const val EXTRA_STATE = "state"
+    const val EXTRA_CODE_CHALLENGE = "code_challenge"
+    const val EXTRA_CODE_CHALLENGE_METHOD = "code_challenge_method"
     
     /** 授权响应 Intent 额外数据键名 */
     const val EXTRA_AUTH_RESPONSE = "auth_response"
@@ -87,8 +92,11 @@ object AppUtils {
     fun createXHSAuthIntent(request: AuthRequest): Intent {
         return Intent().apply {
             component = ComponentName(XHS_PACKAGE_NAME, XHS_LOGIN_ACTIVITY)
-            putExtra(EXTRA_AUTH_REQUEST, request)
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            putExtra(EXTRA_APP_ID, request.appId)
+            putExtra(EXTRA_SCOPE, request.scope)
+            putExtra(EXTRA_STATE, request.state)
+            putExtra(EXTRA_CODE_CHALLENGE, request.codeChallenge)
+            putExtra(EXTRA_CODE_CHALLENGE_METHOD, request.codeChallengeMethod)
         }
     }
 
