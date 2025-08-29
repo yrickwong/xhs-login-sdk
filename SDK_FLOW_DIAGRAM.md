@@ -245,7 +245,7 @@ graph TD
     D -->|支持| G[启动授权流程]
     
     G --> H{授权结果}
-    H -->|用户取消| I[onCancel()]
+    H -->|用户取消| I["onCancel()"]
     H -->|授权拒绝| J[ERROR_AUTH_DENIED]
     H -->|授权成功| K[交换token]
     
@@ -258,7 +258,7 @@ graph TD
     
     P --> Q{用户信息}
     Q -->|失败| R[ERROR_USER_INFO_FAILED]
-    Q -->|成功| S[onSuccess()]
+    Q -->|成功| S["onSuccess()"]
     
     style C fill:#ffcdd2
     style E fill:#ffcdd2
@@ -277,13 +277,13 @@ graph TD
 
 ```mermaid
 graph TD
-    A[存储敏感数据] --> B[CryptoUtils.encrypt()]
+    A[存储敏感数据] --> B["CryptoUtils.encrypt()"]
     B --> C[生成设备唯一密钥]
     C --> D[AES加密数据]
     D --> E[保存到SharedPreferences]
     
     F[读取敏感数据] --> G[从SharedPreferences读取]
-    G --> H[CryptoUtils.decrypt()]  
+    G --> H["CryptoUtils.decrypt()"]  
     H --> I[使用设备密钥解密]
     I --> J[返回明文数据]
     
@@ -307,14 +307,14 @@ graph TD
 ```mermaid
 stateDiagram-v2
     [*] --> 未配置: 创建实例
-    未配置 --> 已配置: configure()
-    已配置 --> 登录中: login()
+    未配置 --> 已配置: "configure()"
+    已配置 --> 登录中: "login()"
     登录中 --> 已登录: 授权成功
     登录中 --> 已配置: 授权失败/取消
-    已登录 --> 已登录: getUserInfo()
-    已登录 --> 已登录: refreshToken() 成功
-    已登录 --> 已配置: refreshToken() 失败
-    已登录 --> 已配置: logout()
+    已登录 --> 已登录: "getUserInfo()"
+    已登录 --> 已登录: "refreshToken() 成功"
+    已登录 --> 已配置: "refreshToken() 失败"
+    已登录 --> 已配置: "logout()"
     已配置 --> [*]: 应用销毁
 ```
 

@@ -1,11 +1,11 @@
 stateDiagram-v2
     [*] --> 未配置: 创建实例
-    未配置 --> 已配置: configure()
-    已配置 --> 登录中: login()
+    未配置 --> 已配置: "configure()"
+    已配置 --> 登录中: "login()"
     登录中 --> 已登录: 授权成功
     登录中 --> 已配置: 授权失败/取消
-    已登录 --> 已登录: getUserInfo()
-    已登录 --> 已登录: refreshToken() 成功
-    已登录 --> 已配置: refreshToken() 失败
-    已登录 --> 已配置: logout()
+    已登录 --> 已登录: "getUserInfo()"
+    已登录 --> 已登录: "refreshToken() 成功"
+    已登录 --> 已配置: "refreshToken() 失败"
+    已登录 --> 已配置: "logout()"
     已配置 --> [*]: 应用销毁
