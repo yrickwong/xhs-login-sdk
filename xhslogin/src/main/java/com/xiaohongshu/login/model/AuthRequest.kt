@@ -9,9 +9,9 @@ data class AuthRequest(
     var scope: Array<String>? = null,
     var state: String? = null,
     var codeChallenge: String? = null,
-    var codeChallengeMethod: String? = null
+    var codeChallengeMethod: String? = null,
 ) : Parcelable {
-    
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

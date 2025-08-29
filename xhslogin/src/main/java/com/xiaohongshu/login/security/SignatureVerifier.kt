@@ -10,21 +10,21 @@ import java.util.*
  * 此类为未来可能的 API 签名需求预留
  */
 object SignatureVerifier {
-    
+
     @JvmStatic
     fun verifySignature(params: Map<String, String>, signature: String, appSecret: String): Boolean {
         if (TextUtils.isEmpty(signature) || TextUtils.isEmpty(appSecret)) {
             return false
         }
-        
+
         val expectedSignature = generateSignature(params, appSecret)
         return signature == expectedSignature
     }
-    
+
     @JvmStatic
     fun generateSignature(params: Map<String, String>, appSecret: String): String {
         val sortedParams = TreeMap(params)
-        
+
         val signBuilder = StringBuilder()
         for ((key, value) in sortedParams) {
             if (!TextUtils.isEmpty(value)) {
@@ -34,13 +34,13 @@ object SignatureVerifier {
                     .append("&")
             }
         }
-        
+
         if (signBuilder.isNotEmpty()) {
             signBuilder.deleteCharAt(signBuilder.length - 1)
         }
-        
+
         signBuilder.append(appSecret)
-        
+
         return CryptoUtils.sha256(signBuilder.toString())
     }
 }

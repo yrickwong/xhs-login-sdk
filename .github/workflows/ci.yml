@@ -38,10 +38,28 @@ jobs:
       run: chmod +x gradlew
       
     - name: Run lint checks
-      run: ./gradlew lint
+      id: lint
+      run: |
+        echo "Running Android Lint..."
+        ./gradlew lint || echo "lint_failed=true" >> $GITHUB_OUTPUT
       
-    - name: Run Detekt code analysis
-      run: ./gradlew detekt
+    - name: Run Detekt code analysis  
+      id: detekt
+      run: |
+        echo "Running Detekt analysis..."
+        ./gradlew detekt || echo "detekt_failed=true" >> $GITHUB_OUTPUT
+        
+    - name: Run Ktlint checks
+      id: ktlint
+      run: |
+        echo "Running Ktlint checks..."
+        ./gradlew ktlintCheck || echo "ktlint_failed=true" >> $GITHUB_OUTPUT
+        
+    - name: Run Spotless checks
+      id: spotless
+      run: |
+        echo "Running Spotless checks..."
+        ./gradlew spotlessCheck || echo "spotless_failed=true" >> $GITHUB_OUTPUT
       
     - name: Build SDK library
       run: ./gradlew :xhslogin:build
@@ -77,6 +95,60 @@ jobs:
         path: |
           **/build/test-results/**/*.xml
           **/build/reports/tests/**/*
+          
+    - name: Create detailed error report
+      if: failure()
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const fs = require('fs');
+          
+          // 收集错误信息
+          let errorReport = "## 🚨 CI构建失败报告\\n\\n";
+          
+          // 检查各个步骤的状态
+          const steps = context.payload.workflow_run?.conclusion || 'unknown';
+          
+          errorReport += "### 失败步骤分析:\\n";
+          if ('${{ steps.lint.outputs.lint_failed }}' === 'true') {
+            errorReport += "- ❌ **Android Lint检查失败** - 代码中存在lint警告/错误\\n";
+            errorReport += "  - 解决方案: 运行 `./gradlew lint` 查看详细报告\\n";
+          }
+          
+          if ('${{ steps.detekt.outputs.detekt_failed }}' === 'true') {
+            errorReport += "- ❌ **Detekt静态分析失败** - 代码质量问题\\n"; 
+            errorReport += "  - 解决方案: 运行 `./gradlew detekt` 查看详细报告\\n";
+          }
+          
+          if ('${{ steps.ktlint.outputs.ktlint_failed }}' === 'true') {
+            errorReport += "- ❌ **Ktlint格式检查失败** - 代码格式不符合规范\\n";
+            errorReport += "  - 自动修复: 运行 `./gradlew ktlintFormat`\\n";
+          }
+          
+          if ('${{ steps.spotless.outputs.spotless_failed }}' === 'true') {
+            errorReport += "- ❌ **Spotless格式检查失败** - 代码格式问题\\n";
+            errorReport += "  - 自动修复: 运行 `./gradlew spotlessApply`\\n";
+          }
+          
+          errorReport += "\\n### 🔧 快速修复指令:\\n";
+          errorReport += "```bash\\n";
+          errorReport += "# 自动修复所有格式问题\\n";
+          errorReport += "./gradlew spotlessApply ktlintFormat\\n";
+          errorReport += "# 重新检查\\n";
+          errorReport += "./gradlew spotlessCheck ktlintCheck detekt lint\\n";
+          errorReport += "```\\n";
+          
+          errorReport += "\\n📋 查看详细报告请下载构建产物中的报告文件。";
+          
+          // 如果是PR，添加评论
+          if (context.issue.number) {
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: errorReport
+            });
+          }
 
   release-build:
     name: Release Build

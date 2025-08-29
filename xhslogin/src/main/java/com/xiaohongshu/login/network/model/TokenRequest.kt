@@ -6,5 +6,5 @@ data class TokenRequest(
     val clientSecret: String,
     val redirectUri: String?, // 在新流程中可以为 null
     val codeVerifier: String,
-    val grantType: String = "authorization_code"
+    val grantType: String = "authorization_code",
 )

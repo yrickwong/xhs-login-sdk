@@ -47,14 +47,61 @@ jobs:
     - name: Run tests
       run: ./gradlew test
       
+    - name: Auto-fix formatting issues
+      if: failure()
+      run: |
+        echo "Attempting to auto-fix formatting issues..."
+        ./gradlew spotlessApply ktlintFormat || true
+        
+    - name: Check if fixes were applied
+      if: failure()
+      id: check_fixes
+      run: |
+        if git diff --quiet; then
+          echo "no_changes=true" >> $GITHUB_OUTPUT
+        else
+          echo "has_changes=true" >> $GITHUB_OUTPUT
+        fi
+        
+    - name: Commit auto-fixes
+      if: failure() && steps.check_fixes.outputs.has_changes == 'true'
+      uses: stefanzweifel/git-auto-commit-action@v5
+      with:
+        commit_message: |
+          🤖 Auto-fix: Apply formatting fixes from PR checks [auto-fix]
+          
+          - Applied Spotless formatting
+          - Fixed Ktlint violations
+          
+          Co-authored-by: github-actions[bot] <github-actions[bot]@users.noreply.github.com>
+        branch: ${{ github.head_ref }}
+        
     - name: Comment PR with results
       uses: actions/github-script@v7
       if: failure()
       with:
         script: |
+          let message = "## 🚨 PR检查结果\\n\\n";
+          
+          if ('${{ steps.check_fixes.outputs.has_changes }}' === 'true') {
+            message += "✅ **自动修复已应用** - 格式问题已自动修正并提交\\n";
+            message += "请重新检查PR，修复应该已经生效。\\n\\n";
+          } else {
+            message += "❌ **检查失败** - 存在需要手动修复的问题\\n\\n";
+            message += "### 🔧 建议操作：\\n";
+            message += "```bash\\n";
+            message += "# 本地运行自动修复\\n";
+            message += "./gradlew spotlessApply ktlintFormat\\n";
+            message += "# 重新检查\\n"; 
+            message += "./gradlew build test\\n";
+            message += "```\\n\\n";
+          }
+          
+          message += "📋 详细报告请查看Actions页面的构建日志。";
+          
           github.rest.issues.createComment({
             issue_number: context.issue.number,
             owner: context.repo.owner,
             repo: context.repo.repo,
-            body: '❌ CI检查失败。请查看Actions页面了解详细错误信息。'
-          })
+            body: message
+          });

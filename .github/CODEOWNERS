@@ -1,0 +1,18 @@
+# 代码所有者文件
+# 确保重要文件的变更需要审核
+
+# 根目录配置文件
+/build.gradle @yrickwong
+/gradle.properties @yrickwong
+/.github/ @yrickwong
+
+# SDK核心代码
+/xhslogin/src/main/java/com/xiaohongshu/login/ @yrickwong
+
+# 安全相关代码（需要额外审核）
+/xhslogin/src/main/java/com/xiaohongshu/login/security/ @yrickwong
+/xhslogin/src/main/java/com/xiaohongshu/login/network/ @yrickwong
+
+# 构建配置
+/xhslogin/build.gradle @yrickwong
+/demo/build.gradle @yrickwong

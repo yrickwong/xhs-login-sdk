@@ -9,7 +9,7 @@ data class XHSUser(
     var accessToken: String? = null,
     var refreshToken: String? = null,
     var expiresIn: Long = 0,
-    var scopes: Array<String>? = null
+    var scopes: Array<String>? = null,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

@@ -4,10 +4,10 @@ data class XHSError(
     val code: Int,
     val message: String,
     val description: String? = null,
-    val cause: Throwable? = null
+    val cause: Throwable? = null,
 ) {
     constructor(code: Int, message: String, cause: Throwable?) : this(code, message, null, cause)
-    
+
     companion object {
         const val ERROR_NETWORK = 1001
         const val ERROR_INVALID_PARAMS = 1002
@@ -17,7 +17,7 @@ data class XHSError(
         const val ERROR_UNSUPPORTED = 1006
         const val ERROR_UNKNOWN = 1999
     }
-    
+
     override fun toString(): String {
         return "XHSError(code=$code, message='$message', description='$description')"
     }
